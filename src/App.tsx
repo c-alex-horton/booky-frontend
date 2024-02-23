@@ -1,5 +1,5 @@
 // Import the App.css file
-import './App.css'
+// import './App.css'
 import { useQuery } from '@tanstack/react-query'
 import { BookData } from './interfaces'
 
