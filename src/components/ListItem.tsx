@@ -1,5 +1,6 @@
 import React from 'react'
 import { BookData } from '../interfaces'
+import { Cell, Row } from 'react-aria-components'
 
 type ListItemProps = {
   item: BookData
@@ -7,9 +8,13 @@ type ListItemProps = {
 
 const ListItem: React.FC<ListItemProps> = ({ item }) => {
   return (
-    <li>
-      {item.name} - {item.author}
-    </li>
+    <Row className='bg-zinc-700 rounded-lg shadow text-orange-500 hover:bg-zinc-600'>
+      <Cell className='rounded-l-lg p-4'>{item.name}</Cell>
+      <Cell className='p-4'>{item.author}</Cell>
+      <Cell className='p-4'>{item.genre}</Cell>
+      <Cell className='p-4'>{item.pages}</Cell>
+      <Cell className='rounded-r-lg p-4'>{item.read ? 'Yes' : 'No'}</Cell>
+    </Row>
   )
 }
 
