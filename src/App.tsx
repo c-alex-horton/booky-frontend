@@ -1,5 +1,5 @@
 import './App.css'
-import { useQuery } from '@tanstack/react-query'
+import { useQuery, useMutation } from '@tanstack/react-query'
 import { BookData } from './interfaces'
 import { Table, TableBody, TableHeader, Column } from 'react-aria-components'
 import ListItem from './components/ListItem'
@@ -16,6 +16,15 @@ function App() {
     isLoading,
     error,
   } = useQuery({ queryKey: ['books'], queryFn: fetchBooks })
+
+  const mutation = useMutation({
+    mutationFn: (deleteBook: number) => {
+      console.log(deleteBook)
+      return fetch(`http://localhost:8000/book/${deleteBook}`, {
+        method: 'DELETE',
+      })
+    },
+  })
 
   if (isLoading) {
     return <div>Loading...</div>
@@ -44,10 +53,11 @@ function App() {
             <Column className={'p-3'}>Genre</Column>
             <Column className={'p-3'}>Pages</Column>
             <Column className={'p-3'}>Read</Column>
+            <Column className={'p-3'}></Column>
           </TableHeader>
           <TableBody className='p-5'>
             {books.map((book: BookData, index: number) => (
-              <ListItem key={index} item={book} />
+              <ListItem key={index} item={book} mutation={mutation} />
             ))}
           </TableBody>
         </Table>
