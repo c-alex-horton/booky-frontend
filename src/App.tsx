@@ -1,31 +1,49 @@
 import './App.css'
-import { useQuery, useMutation } from '@tanstack/react-query'
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { BookData } from './interfaces'
 import { Table, TableBody, TableHeader, Column } from 'react-aria-components'
 import ListItem from './components/ListItem'
 import AddBook from './components/AddBook'
 
 const fetchBooks = async () => {
-  console.log('fetchBooks' + import.meta.env.VITE_APP_URL)
-
   const response = await fetch('http://localhost:8000/books')
 
   return response.json()
 }
 
+// App Component
 function App() {
+  const queryClient = useQueryClient()
+  // Fetch books
   const {
     data: books,
     isLoading,
     error,
   } = useQuery({ queryKey: ['books'], queryFn: fetchBooks })
 
-  const mutation = useMutation({
+  // // Delete book
+  // const useDeleteBook = () => {
+  //   return useMutation({
+  //     mutationFn: (deleteBook: number) => {
+  //       return fetch(`http://localhost:8000/book/${deleteBook}`, {
+  //         method: 'DELETE',
+  //       })
+  //     },
+  //     onSuccess: () => {
+  //       // Invalidate and refetch
+  //       queryClient.invalidateQueries({ queryKey: ['books'] })
+  //     },
+  //   })
+  // }
+  const deleteBookFunc = useMutation({
     mutationFn: (deleteBook: number) => {
-      console.log(deleteBook)
       return fetch(`http://localhost:8000/book/${deleteBook}`, {
         method: 'DELETE',
       })
+    },
+    onSuccess: () => {
+      // Invalidate and refetch
+      queryClient.invalidateQueries({ queryKey: ['books'] })
     },
   })
 
@@ -36,8 +54,6 @@ function App() {
   if (error) {
     return <div>Error: {error.message}</div>
   }
-
-  console.log(books)
 
   return (
     <>
@@ -61,7 +77,7 @@ function App() {
           </TableHeader>
           <TableBody className='p-5'>
             {books.map((book: BookData, index: number) => (
-              <ListItem key={index} item={book} mutation={mutation} />
+              <ListItem key={index} item={book} mutation={deleteBookFunc} />
             ))}
           </TableBody>
         </Table>
