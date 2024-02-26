@@ -1,0 +1,7 @@
+const url = import.meta.env.VITE_APP_URL;
+
+const environment = {
+    url: url
+}
+
+export default environment;

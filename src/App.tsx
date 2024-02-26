@@ -3,8 +3,11 @@ import { useQuery, useMutation } from '@tanstack/react-query'
 import { BookData } from './interfaces'
 import { Table, TableBody, TableHeader, Column } from 'react-aria-components'
 import ListItem from './components/ListItem'
+import AddBook from './components/AddBook'
 
 const fetchBooks = async () => {
+  console.log('fetchBooks' + import.meta.env.VITE_APP_URL)
+
   const response = await fetch('http://localhost:8000/books')
 
   return response.json()
@@ -42,6 +45,7 @@ function App() {
         <h1 className='text-4xl font-bold text-center p-5 text-orange-500'>
           Booky
         </h1>
+        <AddBook />
         <Table
           aria-label='Books'
           className='w-full text-left border-separate border-spacing-y-4 px-5'>
