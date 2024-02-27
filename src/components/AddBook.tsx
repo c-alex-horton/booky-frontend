@@ -22,19 +22,19 @@ const AddBook: React.FC<AddBookProps> = ({
         }}
         className='w-48 [&_input]:rounded-lg [&_input]:bg-zinc-700
       [&_input]:p-2 [&_input]:text-orange-500 '>
-        <TextField name='name'>
+        <TextField name='name' isRequired>
           <Label>Name</Label>
           <Input value={newBook.name || ''} onChange={handleChange} />
         </TextField>
-        <TextField name='author'>
+        <TextField name='author' isRequired>
           <Label>Author</Label>
           <Input value={newBook.author || ''} onChange={handleChange} />
         </TextField>
-        <TextField name='genre'>
+        <TextField name='genre' isRequired>
           <Label>Genre</Label>
           <Input value={newBook.genre || ''} onChange={handleChange} />
         </TextField>
-        <TextField name='pages' type='number'>
+        <TextField name='pages' type='number' isRequired>
           <Label>Pages</Label>
           <Input value={newBook.pages} onChange={handleChange} />
         </TextField>

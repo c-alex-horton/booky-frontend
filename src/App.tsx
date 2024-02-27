@@ -6,8 +6,10 @@ import ListItem from './components/ListItem'
 import AddBook from './components/AddBook'
 import { useState } from 'react'
 
+const apiURL = import.meta.env.VITE_API_URL
+
 const fetchBooks = async () => {
-  const response = await fetch('http://localhost:8000/books')
+  const response = await fetch(`${apiURL}/books`)
 
   return response.json()
 }
@@ -47,7 +49,7 @@ function App() {
   // Add book
   const addBookFunc = useMutation({
     mutationFn: (newBook: NewBookData) => {
-      return fetch('http://localhost:8000/book', {
+      return fetch(`${apiURL}/book`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -64,7 +66,7 @@ function App() {
   // Delete book
   const deleteBookFunc = useMutation({
     mutationFn: (deleteBook: number) => {
-      return fetch(`http://localhost:8000/book/${deleteBook}`, {
+      return fetch(`${apiURL}/book/${deleteBook}`, {
         method: 'DELETE',
       })
     },
