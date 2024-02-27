@@ -1,9 +1,10 @@
 import './App.css'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { BookData } from './interfaces'
+import { BookData, NewBookData } from './interfaces'
 import { Table, TableBody, TableHeader, Column } from 'react-aria-components'
 import ListItem from './components/ListItem'
 import AddBook from './components/AddBook'
+import { useState } from 'react'
 
 const fetchBooks = async () => {
   const response = await fetch('http://localhost:8000/books')
@@ -13,6 +14,28 @@ const fetchBooks = async () => {
 
 // App Component
 function App() {
+  const [newBooks, setNewBooks] = useState<NewBookData>({
+    name: '',
+    author: '',
+    genre: '',
+    pages: 0,
+    read: false,
+  })
+
+  // handle change
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setNewBooks({ ...newBooks, [e.target.name]: e.target.value })
+  }
+
+  // Handle Submit
+  const handleSubmit = (
+    e: React.FormEvent<HTMLFormElement>,
+    data: NewBookData
+  ) => {
+    e.preventDefault()
+    addBookFunc.mutate(data)
+  }
+
   const queryClient = useQueryClient()
   // Fetch books
   const {
@@ -21,20 +44,24 @@ function App() {
     error,
   } = useQuery({ queryKey: ['books'], queryFn: fetchBooks })
 
-  // // Delete book
-  // const useDeleteBook = () => {
-  //   return useMutation({
-  //     mutationFn: (deleteBook: number) => {
-  //       return fetch(`http://localhost:8000/book/${deleteBook}`, {
-  //         method: 'DELETE',
-  //       })
-  //     },
-  //     onSuccess: () => {
-  //       // Invalidate and refetch
-  //       queryClient.invalidateQueries({ queryKey: ['books'] })
-  //     },
-  //   })
-  // }
+  // Add book
+  const addBookFunc = useMutation({
+    mutationFn: (newBook: NewBookData) => {
+      return fetch('http://localhost:8000/book', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(newBook),
+      })
+    },
+    onSuccess: () => {
+      // Invalidate and refetch
+      queryClient.invalidateQueries({ queryKey: ['books'] })
+    },
+  })
+
+  // Delete book
   const deleteBookFunc = useMutation({
     mutationFn: (deleteBook: number) => {
       return fetch(`http://localhost:8000/book/${deleteBook}`, {
@@ -57,15 +84,19 @@ function App() {
 
   return (
     <>
-      <div className='bg-zinc-800 min-h-screen'>
-        <h1 className='text-4xl font-bold text-center p-5 text-orange-500'>
+      <div className='min-h-screen bg-zinc-800'>
+        <h1 className='p-5 text-center text-4xl font-bold text-orange-500'>
           Booky
         </h1>
-        <AddBook />
+        <AddBook
+          newBook={newBooks}
+          handleChange={handleChange}
+          handleSubmit={handleSubmit}
+        />
         <Table
           aria-label='Books'
-          className='w-full text-left border-separate border-spacing-y-4 px-5'>
-          <TableHeader className='bg-gray-500 text-orange-900'>
+          className='w-full border-separate border-spacing-y-4 px-5 text-left'>
+          <TableHeader className='bg-gray-400 text-orange-900'>
             <Column isRowHeader className={'p-3'}>
               Name
             </Column>

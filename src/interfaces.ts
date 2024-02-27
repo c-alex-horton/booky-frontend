@@ -6,3 +6,11 @@ export interface BookData {
   pages: number
   read: boolean
 }
+
+export interface NewBookData {
+  author: string
+  name: string
+  genre: string
+  pages: number
+  read: boolean
+}
