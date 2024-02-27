@@ -1,13 +1,18 @@
+// Imports
 import './App.css'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { BookData, NewBookData } from './interfaces'
 import { Table, TableBody, TableHeader, Column } from 'react-aria-components'
-import ListItem from './components/ListItem'
-import AddBook from './components/AddBook'
 import { useState } from 'react'
 
+// Project Components
+import ListItem from './components/ListItem'
+import AddBook from './components/AddBook'
+
+// Constants
 const apiURL = import.meta.env.VITE_API_URL
 
+// Fetch Books
 const fetchBooks = async () => {
   const response = await fetch(`${apiURL}/books`)
 
@@ -24,6 +29,7 @@ function App() {
     read: false,
   })
 
+  /// Form Functions
   // handle change
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setNewBooks({ ...newBooks, [e.target.name]: e.target.value })
@@ -76,6 +82,7 @@ function App() {
     },
   })
 
+  // Handle Loading and Error
   if (isLoading) {
     return <div>Loading...</div>
   }
@@ -84,12 +91,14 @@ function App() {
     return <div>Error: {error.message}</div>
   }
 
+  // Main Component Content
   return (
     <>
       <div className='min-h-screen bg-zinc-800'>
         <h1 className='p-5 text-center text-4xl font-bold text-orange-500'>
           Booky
         </h1>
+        {/* Add Book Form */}
         <AddBook
           newBook={newBooks}
           handleChange={handleChange}
